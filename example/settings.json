@@ -1,0 +1,9 @@
+{
+  "theme": "light",
+  "language": "zh-CN",
+  "checkUpdates": true,
+  "updateUrl": "https://www.example.com/update.json",
+  "nativeWindow": false,
+  "addressUrl": "https://www.example.com/address.json",
+  "latencyTestCount": 1
+}

@@ -1,0 +1,28 @@
+{
+  "files": [
+    {
+      "path": "mods/modernui.jar",
+      "name": "现代化ui",
+      "description": "为整合包客户端提供高性能现代化字体渲染",
+      "group": "美化"
+    },
+    {
+      "path": "mods/tweakeroo.jar",
+      "name": "Tweakeroo",
+      "description": "提供大量实用的生电辅助功能",
+      "group": "辅助"
+    },
+    {
+      "path": "mods/we.jar",
+      "name": "WorldEdit",
+      "description": "小木斧",
+      "group": "辅助"
+    },
+    {
+      "path": "mods/fancymenu.jar",
+      "name": "整合包菜单",
+      "description": "若不喜欢定制菜单可在此关闭",
+      "group": "美化"
+    }
+  ]
+}

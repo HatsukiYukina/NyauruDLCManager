@@ -1,0 +1,15 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "NyauruDLCManager",
+  "outputfilename": "NyauruDLCManager",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "HatsukiYukina",
+    "email": "2272353474@qq.com"
+  },
+  "excludedExtensions": "log,tmp,bak,lock",
+  "debounce": 2000
+}

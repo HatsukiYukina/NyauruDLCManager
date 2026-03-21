@@ -1,0 +1,48 @@
+{
+    "download": [
+    { 
+        "name":"[n]moderntrainparts-0.1.7-forge-mc1.20.1-cr0.5.1.f.jar" ,
+        "url":"https://cdn.modrinth.com/data/YlOA6mdQ/versions/ZtrWTdJ1/moderntrainparts-0.1.7-forge-mc1.20.1-cr0.5.1.f.jar", 
+        "sha256":"ea4e24d1c48268028e28ed751d478f0d6214d70d5e020f5420d316e29ef29917",
+        "path":"mods/[n]moderntrainparts-0.1.7-forge-mc1.20.1-cr0.5.1.f.jar"
+    },
+    { 
+        "name":"[n]pantographsandwires-forge-1.20.1-beta-0.1.1.jar" ,
+        "url":"https://cdn.modrinth.com/data/VzdCnMqW/versions/NF1ePMRT/pantographsandwires-forge-1.20.1-beta-0.1.1.jar", 
+        "sha256":"4850db88aafd014c1eb67ee58944c8a4f33cc3c3d673412dc938f2a419399a34",
+        "path":"mods/[n]pantographsandwires-forge-1.20.1-beta-0.1.1.jar"
+    },
+    { 
+        "name":"[c]InventoryParticles-1.2.1+1.20.1+forge.jar" ,
+        "url":"https://cdn.modrinth.com/data/XYnKrsxH/versions/wP44dThB/InventoryParticles-1.2.1%2B1.20.1%2Bforge.jar", 
+        "sha256":"deeb293042fef610fad36bf5c1a3870f6ace834f03d88de0f89934fd77d73fa8",
+        "path":"mods/[c]InventoryParticles-1.2.1+1.20.1+forge.jar"
+    },
+    { 
+        "name":"[n]netmusic-1.2.1-forge+mc1.20.1.jar" ,
+        "url":"https://cdn.modrinth.com/data/gKNuqaQq/versions/RZgTph1D/netmusic-1.2.1-forge%2Bmc1.20.1.jar", 
+        "sha256":"eb073d503996063c24a10fece2961e021363c6d185f5d61156f1308a5465d2fa",
+        "path":"mods/[n]netmusic-1.2.1-forge+mc1.20.1.jar"
+    },
+    { 
+        "name":"[n]MossyLib-1.0.4+1.20.1+forge.jar" ,
+        "url":"https://cdn.modrinth.com/data/ffLDUGbm/versions/pL12CtVy/MossyLib-1.0.4%2B1.20.1%2Bforge.jar", 
+        "sha256":"c2f1570aa714a1e6237590b591feb563fe3a3dc3af5aa85d44dd99032dd05e7b",
+        "path":"mods/[n]MossyLib-1.0.4+1.20.1+forge.jar"
+    }
+    ],
+    "copy": [
+        { "file":"[n]moderntrainparts-0.1.7-forge-mc1.20.1-cr0.5.1.f.jar" , "path":"mods/[n]moderntrainparts-0.1.7-forge-mc1.20.1-cr0.5.1.f.jar" },
+        { "file":"[n]pantographsandwires-forge-1.20.1-beta-0.1.1.jar" , "path":"mods/[n]pantographsandwires-forge-1.20.1-beta-0.1.1.jar" },
+        { "file":"[c]InventoryParticles-1.2.1+1.20.1+forge.jar" , "path":"mods/[c]InventoryParticles-1.2.1+1.20.1+forge.jar" },
+        { "file":"[n]netmusic-1.2.1-forge+mc1.20.1.jar" , "path":"mods/[n]netmusic-1.2.1-forge+mc1.20.1.jar" },
+        { "file":"[n]MossyLib-1.0.4+1.20.1+forge.jar" , "path":"mods/[n]MossyLib-1.0.4+1.20.1+forge.jar" }
+    ],
+    "delete": [
+        { "deletefile":"[n]moderntrainparts-0.1.7-forge-mc1.20.1-cr0.5.1.f.jar"},
+        { "deletefile":"[n]pantographsandwires-forge-1.20.1-beta-0.1.1.jar"},
+        { "deletefile":"[c]InventoryParticles-1.2.1+1.20.1+forge.jar"},
+        { "deletefile":"[n]netmusic-1.2.1-forge+mc1.20.1.jar"},
+        { "deletefile":"[n]MossyLib-1.0.4+1.20.1+forge.jar"}
+    ]
+}

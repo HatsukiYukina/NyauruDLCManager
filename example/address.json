@@ -1,0 +1,24 @@
+{
+  "addresses": [
+    {
+      "host": "www.baidu.com",
+      "port": 443,
+      "display": " (百度)"
+    },
+    {
+      "host": "github.com",
+      "port": 443,
+      "display": " (Github)"
+    },
+    {
+      "host": "google.com",
+      "port": 443,
+      "display": " (神秘物品)"
+    },
+    {
+      "host": "cloudflare.com",
+      "port": 443,
+      "display": " (cloudflare)"
+    }
+  ]
+}
