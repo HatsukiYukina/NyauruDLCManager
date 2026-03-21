@@ -1,0 +1,270 @@
+name: Wails Multi-Platform Build (Hybrid Strategy)
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  NODE_OPTIONS: "--max-old-space-size=4096"
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: 'linux-amd64'
+            platform: 'linux/amd64'
+            goarch: 'amd64'
+          - name: 'linux-arm64'
+            platform: 'linux/arm64'
+            goarch: 'arm64'
+          - name: 'linux-arm-7'
+            platform: 'linux/arm/v7'
+            goarch: 'arm'
+            goarm: '7'
+          - name: 'linux-arm-6'
+            platform: 'linux/arm/v6'
+            goarch: 'arm'
+            goarm: '6'
+          - name: 'linux-386'
+            platform: 'linux/386'
+            goarch: '386'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64,arm
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25'
+          cache: 'npm'
+          cache-dependency-path: 'frontend/package-lock.json'
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+      - name: Install Wails
+        run: |
+          go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev \
+            libwebkit2gtk-4.0-dev \
+            build-essential \
+            pkg-config
+
+      - name: Build Linux ${{ matrix.name }} with Docker
+        if: contains(matrix.platform, 'arm')
+        run: |
+          docker run --rm \
+            -v $(pwd):/build \
+            -w /build \
+            -e GOARCH=${{ matrix.goarch }} \
+            -e GOARM=${{ matrix.goarm }} \
+            -e CGO_ENABLED=1 \
+            wailsapp/wails:latest \
+            bash -c "
+              cd frontend && npm install && cd .. && \
+              wails build \
+                -platform ${{ matrix.platform }} \
+                -o ${{ matrix.name }} \
+                -ldflags '-s -w' \
+                -clean
+            "
+
+      - name: Build Linux ${{ matrix.name }} natively
+        if: contains(matrix.platform, 'arm') == false
+        run: |
+          cd frontend && npm install && cd ..
+          
+          wails build \
+            -platform ${{ matrix.platform }} \
+            -o ${{ matrix.name }} \
+            -ldflags '-s -w' \
+            -clean
+
+      - name: Find artifact
+        id: find
+        run: |
+          if [ -f "build/bin/${{ matrix.name }}" ]; then
+            echo "artifact=build/bin/${{ matrix.name }}" >> $GITHUB_OUTPUT
+          elif [ -f "build/bin/${{ matrix.name }}.exe" ]; then
+            echo "artifact=build/bin/${{ matrix.name }}.exe" >> $GITHUB_OUTPUT
+          else
+            find . -name "${{ matrix.name }}*" -type f -executable 2>/dev/null | head -1 | xargs -I {} echo "artifact={}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}
+          path: ${{ steps.find.outputs.artifact }}
+          if-no-files-found: warn
+
+  build-windows:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: 'windows-amd64'
+            platform: 'windows/amd64'
+          - name: 'windows-arm64'
+            platform: 'windows/arm64'
+          - name: 'windows-386'
+            platform: 'windows/386'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25'
+          cache: 'npm'
+          cache-dependency-path: 'frontend/package-lock.json'
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - name: Install Wails
+        run: |
+          go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm install
+          cd ..
+
+      - name: Build Windows ${{ matrix.name }}
+        shell: bash
+        run: |
+          if [[ "${{ matrix.platform }}" == "windows/arm64" ]]; then
+            export GOARM=7
+          fi
+          
+          wails build \
+            -platform ${{ matrix.platform }} \
+            -o ${{ matrix.name }}.exe \
+            -ldflags '-s -w' \
+            -clean
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}
+          path: build/bin/${{ matrix.name }}.exe
+          if-no-files-found: warn
+
+  build-macos:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: 'macos-amd64'
+            platform: 'darwin/amd64'
+          - name: 'macos-arm64'
+            platform: 'darwin/arm64'
+          - name: 'macos-universal'
+            platform: 'darwin/universal'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25'
+          cache: 'npm'
+          cache-dependency-path: 'frontend/package-lock.json'
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - name: Install Wails
+        run: |
+          go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm install
+          cd ..
+
+      - name: Build macOS ${{ matrix.name }}
+        run: |
+          if [[ "${{ matrix.platform }}" == "darwin/universal" ]]; then
+            wails build \
+              -platform ${{ matrix.platform }} \
+              -o ${{ matrix.name }} \
+              -ldflags '-s -w' \
+              -clean
+          else
+            wails build \
+              -platform ${{ matrix.platform }} \
+              -o ${{ matrix.name }} \
+              -ldflags '-s -w' \
+              -clean
+          fi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}
+          path: build/bin/${{ matrix.name }}
+          if-no-files-found: warn
+
+  release:
+    needs: [build-linux, build-windows, build-macos]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: List artifacts
+        run: |
+          find ./artifacts -type f | sort
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./artifacts/**/*
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
